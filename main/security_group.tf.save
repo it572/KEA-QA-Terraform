@@ -1,0 +1,23 @@
+resource "aws_security_group" "qa_app" {
+  name        = "${var.project_name}-sg"
+  description = "QA app server - restrictive inbound/outbound"
+  vpc_id      = aws_vpc.qa.id
+
+  tags = {
+    Name        = "${var.project_name}-sg"
+    Environment = "QA"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_role" "ssh" {
+  security_gorup_id = aws_security_group.qa_app.id
+  description = "SSH from admin IP only"
+
+  cidr_ipv4 = var.allowed_ssh_cidr
+  from_port = 22
+  to_port = 22
+  ip_protocol = "tcp"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "app_porys" {
+  for_each 
