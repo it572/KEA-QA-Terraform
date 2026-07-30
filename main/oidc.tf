@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
     condition {
       test = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values = ["repo:it572/KEA-ERP-QA:*"]
+      values = ["repo:it572@306431439/KEA-ERP-QA@1310942414:*"]
     }
   }
 }
@@ -82,6 +82,15 @@ data "aws_iam_policy_document" "github_actions_permissions" {
     sid = "SSMDeployStatus"
     actions = ["ssm:GetCommandInvocation", "ssm:ListCommandInvocations"]
     resources = ["*"]
+  }
+  
+  statement {
+    sid = "SSMBuildTimeSecrets"
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.geoapify_key.arn,
+      aws_ssm_parameter.tinymce_key.arn,
+    ]
   }
 }
 
